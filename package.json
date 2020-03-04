@@ -15,5 +15,8 @@
 	},
 	"devDependencies": {
 		"@wordpress/scripts": "^7.1.2"
+	},
+	"dependencies": {
+		"react-photo-gallery": "^8.0.0"
 	}
 }

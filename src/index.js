@@ -48,8 +48,23 @@ registerBlockType( 'create-block/giphy-block', {
 	icon: 'smiley',
 
 	attributes: {
+		textAlignment: {
+			type: 'string',
+		},
+		blockAlignment: {
+			type: 'string',
+			default: 'wide',
+		},
 		search: {
 			type: 'string'
+		},
+		gif: {
+			type: 'object'
+		}
+	},
+	getEditWrapperProps( { blockAlignment } ) {
+		if ( 'left' === blockAlignment || 'right' === blockAlignment || 'full' === blockAlignment ) {
+			return { 'data-align': blockAlignment };
 		}
 	},
 
@@ -81,14 +96,9 @@ registerBlockType( 'create-block/giphy-block', {
 	 *
 	 * @return {WPElement} Element to render.
 	 */
-	save() {
+	save: props => {
 		return (
-			<p>
-				{ __(
-					'Giphy Block – hello from the saved content!',
-					'create-block'
-				) }
-			</p>
+			<img src={ props.attributes.gif.src } />
 		);
 	},
 } );
