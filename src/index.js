@@ -12,6 +12,8 @@ import { registerBlockType } from '@wordpress/blocks';
  */
 import { __ } from '@wordpress/i18n';
 
+import edit from './edit';
+
 /**
  * Every block starts by registering a new block type definition.
  *
@@ -45,6 +47,12 @@ registerBlockType( 'create-block/giphy-block', {
 	 */
 	icon: 'smiley',
 
+	attributes: {
+		search: {
+			type: 'string'
+		}
+	},
+
 	/**
 	 * Optional block extended support features.
 	 */
@@ -63,13 +71,7 @@ registerBlockType( 'create-block/giphy-block', {
 	 *
 	 * @return {WPElement} Element to render.
 	 */
-	edit( { className } ) {
-		return (
-			<p className={ className }>
-				{ __( 'Giphy Block – hello from the editor!', 'create-block' ) }
-			</p>
-		);
-	},
+	edit,
 
 	/**
 	 * The save function defines the way in which the different attributes should be combined
