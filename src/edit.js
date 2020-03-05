@@ -3,6 +3,7 @@ import { AlignmentToolbar, BlockControls, BlockAlignmentToolbar } from '@wordpre
 import { addQueryArgs } from '@wordpress/url';
 import { debounce } from 'lodash';
 
+import GiphyInspectorControl from "./components/GiphyInspectorControl";
 import SearchGiphy from "./components/SearchGiphy";
 import Gif from "./components/Gif";
 
@@ -129,6 +130,8 @@ export default class Edit extends Component {
 
 		return (
 			<div className={ className }>
+				<GiphyInspectorControl apiKey=""/>
+
 				<BlockControls>
 					<BlockAlignmentToolbar
 						value={ blockAlignment }
