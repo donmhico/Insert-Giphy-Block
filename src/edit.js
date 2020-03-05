@@ -18,6 +18,7 @@ export default class Edit extends Component {
 			gifs: [], // Cache results from Giphy.
 			pagination: 0, // Current pagination.
 			apiKey: '', // Giphy API Key. Set in the InspectorControls and globally as a DB option.
+			isProcessingApiKey: true, // If currently fetching or saving the API Key.
 		};
 
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
@@ -30,7 +31,9 @@ export default class Edit extends Component {
 		this.onGiphyClick = this.onGiphyClick.bind( this );
 
 		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
-		this.onApiKeyChangeHandler = this.onApiKeyChangeHandler.bind( this );
+
+		this.onApiKeyChange = this.onApiKeyChange.bind( this );
+		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 300 );
 	}
 
 	async componentDidMount() {
@@ -38,7 +41,10 @@ export default class Edit extends Component {
 		// TODO - Handle error.
 		// TODO - UI when fetching API key.
 		// TODO - Handle empty API Key.
-		this.setState( { apiKey } );
+		this.setState( {
+			apiKey,
+			isProcessingApiKey: false
+		} );
 	}
 
 	componentWillUnmount() {
@@ -147,16 +153,30 @@ export default class Edit extends Component {
 
 	/**
 	 * Invoked when the API Key field in Inspector Control was changed.
-	 * This will save the new input content in the DB as the API Key.
 	 *
 	 * @param apiKey string
+	 */
+	onApiKeyChange( apiKey ) {
+		this.setState( { apiKey } );
+
+		this.onApiKeyChangeHandler();
+	}
+
+	/**
+	 * Save the current apiKey in state in the DB as the API Key.
+	 *
 	 * @returns {Promise<void>}
 	 */
-	async onApiKeyChangeHandler( apiKey ) {
+	async onApiKeyChangeHandler() {
+		this.setState( {
+			isProcessingApiKey: true
+		} );
 		// TODO - Handle error.
 		// TODO - UI when saving API key.
-		const saveApiKey = await this.saveApiKey( apiKey );
-		this.setState( { apiKey } );
+		const saveApiKey = await this.saveApiKey( this.state.apiKey );
+		this.setState( {
+			isProcessingApiKey: false
+		} );
 	}
 
 	render() {
@@ -171,11 +191,18 @@ export default class Edit extends Component {
 			setAttributes
 		} = this.props;
 
-		const { isLoading, isSearching, gifs, pagination, apiKey } = this.state;
+		const {
+			isLoading,
+			isSearching,
+			gifs,
+			pagination,
+			apiKey,
+			isProcessingApiKey
+		} = this.state;
 
 		return (
 			<div className={ className }>
-				<GiphyInspectorControl onApiKeyChange={ this.onApiKeyChangeHandler } apiKey={ apiKey }/>
+				<GiphyInspectorControl isLoading={ isProcessingApiKey } onApiKeyChange={ this.onApiKeyChange } apiKey={ apiKey }/>
 
 				<BlockControls>
 					<BlockAlignmentToolbar
