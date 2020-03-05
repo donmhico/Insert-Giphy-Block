@@ -4,6 +4,7 @@ import { addQueryArgs } from '@wordpress/url';
 import { debounce } from 'lodash';
 
 import SearchGiphy from "./components/SearchGiphy";
+import Gif from "./components/Gif";
 
 export default class Edit extends Component {
 	constructor( props ) {
@@ -17,7 +18,7 @@ export default class Edit extends Component {
 		};
 
 		// Get the API Key from https://developers.giphy.com/.
-		this.API_KEY = '[INSERT YOUR API KEY HERE]';
+		this.API_KEY = '[INSERT API KEY HERE]';
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
 		this.GIPHY_RESULTS_LIMIT = 5;
 
@@ -26,6 +27,8 @@ export default class Edit extends Component {
 		// Use debounce to prevent multiple concurrent request to Giphy.
 		this.onSearchChange = debounce( this.onSearchChange.bind( this ), 500 );
 		this.onGiphyClick = this.onGiphyClick.bind( this );
+
+		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
 	}
 
 	componentWillUnmount() {
@@ -101,6 +104,15 @@ export default class Edit extends Component {
 		this.onSearchChange();
 	}
 
+	onRemoveClickHandler() {
+		this.setState( {
+			isSearching: true,
+			isLoading: true,
+		} );
+
+		this.onSearchChange();
+	}
+
 	render() {
 		const {
 			attributes: {
@@ -138,7 +150,7 @@ export default class Edit extends Component {
 						pagination={ pagination }
 					/>
 				) : (
-					<img src={ gif.src } />
+					<Gif onRemoveClickHandler={ this.onRemoveClickHandler } gif={ gif.src } />
 				) }
 			</div>
 		);
