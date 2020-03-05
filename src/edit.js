@@ -1,6 +1,7 @@
 import { Component } from '@wordpress/element';
 import { AlignmentToolbar, BlockControls, BlockAlignmentToolbar } from '@wordpress/editor';
 import { addQueryArgs } from '@wordpress/url';
+import apiFetch from '@wordpress/api-fetch';
 import { debounce } from 'lodash';
 
 import GiphyInspectorControl from "./components/GiphyInspectorControl";
@@ -16,10 +17,9 @@ export default class Edit extends Component {
 			isSearching: !props.attributes.gif, // If we need to show the search field.
 			gifs: [], // Cache results from Giphy.
 			pagination: 0, // Current pagination.
+			apiKey: '', // Giphy API Key. Set in the InspectorControls and globally as a DB option.
 		};
 
-		// Get the API Key from https://developers.giphy.com/.
-		this.API_KEY = '[INSERT API KEY HERE]';
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
 		this.GIPHY_RESULTS_LIMIT = 5;
 
@@ -30,10 +30,37 @@ export default class Edit extends Component {
 		this.onGiphyClick = this.onGiphyClick.bind( this );
 
 		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
+		this.onApiKeyChangeHandler = this.onApiKeyChangeHandler.bind( this );
+	}
+
+	async componentDidMount() {
+		const apiKey = await this.fetchApiKey();
+		// TODO - Handle error.
+		// TODO - UI when fetching API key.
+		// TODO - Handle empty API Key.
+		this.setState( { apiKey } );
 	}
 
 	componentWillUnmount() {
 		this.onSearchChange.cancel();
+	}
+
+	fetchApiKey() {
+		return apiFetch({
+			path: "/dmgiphyblock/v1/api-key"
+		})
+		.then( apiKey => apiKey )
+		.catch( error => error);
+	}
+
+	saveApiKey( apiKey ) {
+		return apiFetch({
+			path: "/dmgiphyblock/v1/api-key",
+			method: "POST",
+			body: apiKey
+		})
+		.then( apiKey => apiKey )
+		.catch( error => error );
 	}
 
 	/**
@@ -83,7 +110,7 @@ export default class Edit extends Component {
 		const requestUrl = addQueryArgs( this.GIPHY_ENDPOINT, {
 			q: search,
 			limit: this.GIPHY_RESULTS_LIMIT,
-			api_key: this.API_KEY,
+			api_key: this.state.apiKey,
 			offset: pagination,
 		} );
 
@@ -105,6 +132,10 @@ export default class Edit extends Component {
 		this.onSearchChange();
 	}
 
+	/**
+	 * Invoked when the "Trash" button is clicked.
+	 * This will remove the current selected GIF and will allow the user to search again.
+	 */
 	onRemoveClickHandler() {
 		this.setState( {
 			isSearching: true,
@@ -112,6 +143,20 @@ export default class Edit extends Component {
 		} );
 
 		this.onSearchChange();
+	}
+
+	/**
+	 * Invoked when the API Key field in Inspector Control was changed.
+	 * This will save the new input content in the DB as the API Key.
+	 *
+	 * @param apiKey string
+	 * @returns {Promise<void>}
+	 */
+	async onApiKeyChangeHandler( apiKey ) {
+		// TODO - Handle error.
+		// TODO - UI when saving API key.
+		const saveApiKey = await this.saveApiKey( apiKey );
+		this.setState( { apiKey } );
 	}
 
 	render() {
@@ -126,11 +171,11 @@ export default class Edit extends Component {
 			setAttributes
 		} = this.props;
 
-		const { isLoading, isSearching, gifs, pagination } = this.state;
+		const { isLoading, isSearching, gifs, pagination, apiKey } = this.state;
 
 		return (
 			<div className={ className }>
-				<GiphyInspectorControl apiKey=""/>
+				<GiphyInspectorControl onApiKeyChange={ this.onApiKeyChangeHandler } apiKey={ apiKey }/>
 
 				<BlockControls>
 					<BlockAlignmentToolbar

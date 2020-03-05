@@ -14,6 +14,7 @@ export default class GiphyInspectorControl extends Component {
 						<TextControl
 							label={ __( 'Enter Giphy API Key' ) }
 							value={ this.props.apiKey }
+							onChange={ apiKey => this.props.onApiKeyChange( apiKey ) }
 						/>
 					</PanelBody>
 				</InspectorControls>
