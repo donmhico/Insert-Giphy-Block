@@ -2,7 +2,7 @@ import { Component } from '@wordpress/element';
 import { AlignmentToolbar, BlockControls, BlockAlignmentToolbar } from '@wordpress/editor';
 import { addQueryArgs } from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
-import { debounce } from 'lodash';
+import { debounce, delay } from 'lodash';
 
 import GiphyInspectorControl from "./components/GiphyInspectorControl";
 import SearchGiphy from "./components/SearchGiphy";
@@ -19,6 +19,7 @@ export default class Edit extends Component {
 			pagination: 0, // Current pagination.
 			apiKey: '', // Giphy API Key. Set in the InspectorControls and globally as a DB option.
 			isProcessingApiKey: true, // If currently fetching or saving the API Key.
+			isApiKeySaved: false, // If API Key was saved.
 		};
 
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
@@ -34,13 +35,14 @@ export default class Edit extends Component {
 
 		this.onApiKeyChange = this.onApiKeyChange.bind( this );
 		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 300 );
+
+		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind( this );
 	}
 
 	async componentDidMount() {
 		const apiKey = await this.fetchApiKey();
 		// TODO - Handle error.
-		// TODO - UI when fetching API key.
-		// TODO - Handle empty API Key.
+
 		this.setState( {
 			apiKey,
 			isProcessingApiKey: false
@@ -49,6 +51,7 @@ export default class Edit extends Component {
 
 	componentWillUnmount() {
 		this.onSearchChange.cancel();
+		this.onApiKeyChangeHandler.cancel();
 	}
 
 	fetchApiKey() {
@@ -172,11 +175,21 @@ export default class Edit extends Component {
 			isProcessingApiKey: true
 		} );
 		// TODO - Handle error.
-		// TODO - UI when saving API key.
+
 		const saveApiKey = await this.saveApiKey( this.state.apiKey );
 		this.setState( {
-			isProcessingApiKey: false
+			isProcessingApiKey: false,
+			isApiKeySaved: true,
 		} );
+
+		delay( this.updateIsApiKeySavedToFalse, 3000 );
+	}
+
+	/**
+	 * Setting the state `isApiKeySaved` to false will hide the 'Saved' message.
+	 */
+	updateIsApiKeySavedToFalse() {
+		this.setState( { isApiKeySaved: false } );
 	}
 
 	render() {
@@ -197,12 +210,13 @@ export default class Edit extends Component {
 			gifs,
 			pagination,
 			apiKey,
-			isProcessingApiKey
+			isProcessingApiKey,
+			isApiKeySaved,
 		} = this.state;
 
 		return (
 			<div className={ className }>
-				<GiphyInspectorControl isLoading={ isProcessingApiKey } onApiKeyChange={ this.onApiKeyChange } apiKey={ apiKey }/>
+				<GiphyInspectorControl isApiKeySaved={ isApiKeySaved } isLoading={ isProcessingApiKey } onApiKeyChange={ this.onApiKeyChange } apiKey={ apiKey }/>
 
 				<BlockControls>
 					<BlockAlignmentToolbar

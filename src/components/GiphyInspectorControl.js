@@ -9,7 +9,9 @@ export default class GiphyInspectorControl extends Component {
 			isLoading,
 			apiKey,
 			onApiKeyChange,
+			isApiKeySaved,
 		} = this.props;
+
 		return (
 			<Fragment>
 				<InspectorControls>
@@ -27,6 +29,9 @@ export default class GiphyInspectorControl extends Component {
 								/>
 							) }
 						</PanelRow>
+						{ isApiKeySaved && (
+							<div>Saved</div>
+						) }
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>
