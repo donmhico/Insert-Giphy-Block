@@ -19,12 +19,12 @@ import edit from './edit';
  *
  * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
-registerBlockType( 'create-block/giphy-block', {
+registerBlockType( 'donmhico/giphy-block', {
 	/**
 	 * This is the display title for your block, which can be translated with `i18n` functions.
 	 * The block inserter will show this name.
 	 */
-	title: __( 'Giphy Block', 'create-block' ),
+	title: __( 'Giphy Block', 'giphy-block' ),
 
 	/**
 	 * This is a short description for your block, can be translated with `i18n` functions.
@@ -32,7 +32,7 @@ registerBlockType( 'create-block/giphy-block', {
 	 */
 	description: __(
 		'Example block written with ESNext standard and JSX support – build step required.',
-		'create-block'
+		'giphy-block'
 	),
 
 	/**
