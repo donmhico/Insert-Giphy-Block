@@ -1,37 +1,18 @@
 import { __ } from '@wordpress/i18n';
 import { Component, Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/editor';
-import { PanelBody, PanelRow, TextControl, Spinner } from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
+import ApiKeyField from "./ApiKeyField";
 
 export default class GiphyInspectorControl extends Component {
 	render() {
-		const {
-			isLoading,
-			apiKey,
-			onApiKeyChange,
-			isApiKeySaved,
-		} = this.props;
-
 		return (
 			<Fragment>
 				<InspectorControls>
 					<PanelBody
 						title={ __( 'Giphy Block Settings', 'giphy-block' ) }
 						initialOpen>
-						<PanelRow>
-							{ isLoading ? (
-								<Spinner />
-							) : (
-								<TextControl
-									label={ __( 'Enter Giphy API Key' ) }
-									value={ apiKey }
-									onChange={ apiKey => onApiKeyChange( apiKey ) }
-								/>
-							) }
-						</PanelRow>
-						{ isApiKeySaved && (
-							<div>Saved</div>
-						) }
+						<ApiKeyField { ...this.props } />
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>

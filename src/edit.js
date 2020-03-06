@@ -7,6 +7,7 @@ import { debounce, delay } from 'lodash';
 import GiphyInspectorControl from "./components/GiphyInspectorControl";
 import SearchGiphy from "./components/SearchGiphy";
 import Gif from "./components/Gif";
+import ApiKeyField from "./components/ApiKeyField";
 
 export default class Edit extends Component {
 	constructor( props ) {
@@ -18,6 +19,7 @@ export default class Edit extends Component {
 			gifs: [], // Cache results from Giphy.
 			pagination: 0, // Current pagination.
 			apiKey: '', // Giphy API Key. Set in the InspectorControls and globally as a DB option.
+			isTypingApiKey: false, // If API key currently being typed.
 			isProcessingApiKey: true, // If currently fetching or saving the API Key.
 			isApiKeySaved: false, // If API Key was saved.
 		};
@@ -34,7 +36,7 @@ export default class Edit extends Component {
 		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
 
 		this.onApiKeyChange = this.onApiKeyChange.bind( this );
-		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 300 );
+		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 500 );
 
 		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind( this );
 	}
@@ -160,7 +162,10 @@ export default class Edit extends Component {
 	 * @param apiKey string
 	 */
 	onApiKeyChange( apiKey ) {
-		this.setState( { apiKey } );
+		this.setState( {
+			apiKey,
+			isTypingApiKey: true,
+		} );
 
 		this.onApiKeyChangeHandler();
 	}
@@ -178,6 +183,7 @@ export default class Edit extends Component {
 
 		const saveApiKey = await this.saveApiKey( this.state.apiKey );
 		this.setState( {
+			isTypingApiKey: false,
 			isProcessingApiKey: false,
 			isApiKeySaved: true,
 		} );
@@ -210,13 +216,19 @@ export default class Edit extends Component {
 			gifs,
 			pagination,
 			apiKey,
+			isTypingApiKey,
 			isProcessingApiKey,
 			isApiKeySaved,
 		} = this.state;
 
 		return (
 			<div className={ className }>
-				<GiphyInspectorControl isApiKeySaved={ isApiKeySaved } isLoading={ isProcessingApiKey } onApiKeyChange={ this.onApiKeyChange } apiKey={ apiKey }/>
+				<GiphyInspectorControl
+					isApiKeySaved={ isApiKeySaved }
+					isLoading={ isProcessingApiKey }
+					onApiKeyChange={ this.onApiKeyChange }
+					apiKey={ apiKey }
+				/>
 
 				<BlockControls>
 					<BlockAlignmentToolbar
@@ -229,7 +241,14 @@ export default class Edit extends Component {
 					/>
 				</BlockControls>
 
-				{ isSearching ? (
+				{ apiKey.length === 0 || isTypingApiKey ? (
+					<ApiKeyField
+						isApiKeySaved={ isApiKeySaved }
+						isLoading={ isProcessingApiKey }
+						onApiKeyChange={ this.onApiKeyChange }
+						apiKey={ apiKey }
+					/>
+				) : isSearching ? (
 					<SearchGiphy
 						search={ search }
 						onSearchChangeHandler={ this.onSearchChangeHandler }
