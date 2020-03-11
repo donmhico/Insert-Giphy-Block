@@ -153,7 +153,14 @@ export default class Edit extends Component {
 	}
 
 	onSearchChangeHandler( search ) {
-		this.setState( { isLoading: true } );
+		// Reset the state.
+		this.setState( {
+			isLoading: true,
+			gifs: [],
+			pagination: 1,
+			maxPage: 0,
+		} );
+
 		// Save the search keyword as `search` in the DB.
 		this.props.setAttributes( { search } );
 		this.onSearchChange();
