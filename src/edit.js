@@ -289,7 +289,11 @@ export default class Edit extends Component {
 						maxPage={ maxPage }
 					/>
 				) : (
-					<Gif onRemoveClickHandler={ this.onRemoveClickHandler } gif={ gif.src } />
+					<Gif
+						style={ { textAlign: textAlignment } }
+						onRemoveClickHandler={ this.onRemoveClickHandler }
+						gif={ gif.src }
+					/>
 				) }
 			</div>
 		);

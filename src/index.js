@@ -97,10 +97,21 @@ registerBlockType( 'donmhico/giphy-block', {
 	 * @return {WPElement} Element to render.
 	 */
 	save: props => {
+		const {
+			blockAlignment,
+			textAlignment,
+			gif
+		} = props.attributes;
+
 		return (
-			props.attributes.gif ? (
-				props.attributes.gif.src ? (
-					<img src={ props.attributes.gif.src }/>
+			gif ? (
+				gif.src ? (
+					<div
+						className={ `align${blockAlignment}` }
+						style={ { textAlign: textAlignment } }
+					>
+						<img src={ gif.src }/>
+					</div>
 				) : null
 			) : null
 		);
