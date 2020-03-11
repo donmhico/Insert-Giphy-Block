@@ -7,3 +7,7 @@
 .wp-block-donmhico-giphy-block {
 	border: 1px dotted #f00;
 }
+
+.wp-block-donmhico-giphy-block .giphy_nav_controls {
+	display: flex;
+}

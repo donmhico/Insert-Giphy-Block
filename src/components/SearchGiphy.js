@@ -1,5 +1,5 @@
 import { Component, Fragment } from '@wordpress/element';
-import { TextControl, Spinner } from '@wordpress/components';
+import { TextControl, Spinner, Button, Dashicon } from '@wordpress/components';
 import Gallery from "react-photo-gallery";
 
 export default class SearchGiphy extends Component {
@@ -14,7 +14,9 @@ export default class SearchGiphy extends Component {
 			isLoading,
 			gifs,
 			onGiphyClick,
-			pagination
+			pagination,
+			onPaginationChangeHandler,
+			maxPage,
 		} = this.props;
 
 		let result_gifs;
@@ -51,6 +53,30 @@ export default class SearchGiphy extends Component {
 
 				{ result_gifs && result_gifs.length === 0 && (
 					<p>{ `Nothing found for '${search}'.` }</p>
+				) }
+
+				{ gifs.length > 0 && (
+					<div className="giphy_nav_controls">
+						<div><Button><Dashicon icon="controls-back"/></Button></div>
+						<div>
+							<TextControl
+								onChange={ ( input ) => {
+									if ( isNaN( input ) || input <= 0 ) {
+										return;
+									}
+
+									if ( input > maxPage ) {
+										input = maxPage;
+									}
+
+									onPaginationChangeHandler( input );
+								} }
+								value={ pagination }/>
+						</div>
+						<div>/</div>
+						<div>{ maxPage }</div>
+						<div><Button><Dashicon icon="controls-forward"/></Button></div>
+					</div>
 				) }
 
 			</Fragment>

@@ -17,11 +17,12 @@ export default class Edit extends Component {
 			isLoading: false, // If currently fetching from Giphy.
 			isSearching: !props.attributes.gif, // If we need to show the search field.
 			gifs: [], // Cache results from Giphy.
-			pagination: 0, // Current pagination.
+			pagination: 1, // Current pagination.
 			apiKey: '', // Giphy API Key. Set in the InspectorControls and globally as a DB option.
 			isTypingApiKey: false, // If API key currently being typed.
 			isProcessingApiKey: true, // If currently fetching or saving the API Key.
 			isApiKeySaved: false, // If API Key was saved.
+			maxPage: 0, // Max results page.
 		};
 
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
@@ -39,6 +40,8 @@ export default class Edit extends Component {
 		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 500 );
 
 		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind( this );
+
+		this.onPaginationChangeHandler = this.onPaginationChangeHandler.bind( this );
 	}
 
 	async componentDidMount() {
@@ -84,9 +87,17 @@ export default class Edit extends Component {
 			attributes: { search }
 		} = this.props;
 
-		const pagination = this.state.pagination / this.GIPHY_RESULTS_LIMIT;
+		if ( this.state.gifs[ this.state.pagination ] ) {
+			this.setState( {
+				isLoading: false,
+			} );
+			return;
+		}
 
-		const results = await this.fetchGiphy( search, pagination );
+		// Minus 1 is needed as offset starts with 0.
+		const offset = (this.state.pagination - 1) * this.GIPHY_RESULTS_LIMIT;
+
+		const results = await this.fetchGiphy( search, offset );
 
 		if ( 200 !== results.meta.status ) {
 			// TODO handle error.
@@ -99,13 +110,18 @@ export default class Edit extends Component {
 		// gifs[1] => Results of pagination 1.
 		// and so on..
 		let gifs = this.state.gifs;
-		gifs[ pagination ] = results.data;
+		gifs[ this.state.pagination ] = results.data;
 
-		this.setState( {
+		let newState = {
 			isLoading: false,
-			pagination: pagination,
-			gifs: gifs
-		} );
+			gifs: gifs,
+		};
+
+		if ( this.state.maxPage === 0 ) {
+			newState.maxPage = Math.ceil( results.pagination.total_count / this.GIPHY_RESULTS_LIMIT );
+		}
+
+		this.setState( newState );
 	}
 
 	/**
@@ -140,6 +156,11 @@ export default class Edit extends Component {
 		this.setState( { isLoading: true } );
 		// Save the search keyword as `search` in the DB.
 		this.props.setAttributes( { search } );
+		this.onSearchChange();
+	}
+
+	onPaginationChangeHandler( pagination ) {
+		this.setState( { pagination, isLoading: true } );
 		this.onSearchChange();
 	}
 
@@ -219,6 +240,7 @@ export default class Edit extends Component {
 			isTypingApiKey,
 			isProcessingApiKey,
 			isApiKeySaved,
+			maxPage,
 		} = this.state;
 
 		return (
@@ -256,6 +278,8 @@ export default class Edit extends Component {
 						gifs={ gifs }
 						onGiphyClick={ this.onGiphyClick }
 						pagination={ pagination }
+						onPaginationChangeHandler={ this.onPaginationChangeHandler }
+						maxPage={ maxPage }
 					/>
 				) : (
 					<Gif onRemoveClickHandler={ this.onRemoveClickHandler } gif={ gif.src } />
