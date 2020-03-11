@@ -160,7 +160,7 @@ export default class Edit extends Component {
 	}
 
 	onPaginationChangeHandler( pagination ) {
-		this.setState( { pagination, isLoading: true } );
+		this.setState( { pagination: Number( pagination ), isLoading: true } );
 		this.onSearchChange();
 	}
 

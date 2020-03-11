@@ -57,7 +57,14 @@ export default class SearchGiphy extends Component {
 
 				{ gifs.length > 0 && (
 					<div className="giphy_nav_controls">
-						<div><Button><Dashicon icon="controls-back"/></Button></div>
+						{ pagination > 1 && (
+							<div>
+								<Button onClick={ () => onPaginationChangeHandler( pagination - 1 ) } >
+									<Dashicon icon="controls-back"/>
+								</Button>
+							</div>
+						) }
+
 						<div>
 							<TextControl
 								onChange={ ( input ) => {
@@ -75,7 +82,15 @@ export default class SearchGiphy extends Component {
 						</div>
 						<div>/</div>
 						<div>{ maxPage }</div>
-						<div><Button><Dashicon icon="controls-forward"/></Button></div>
+
+						{ pagination < maxPage && (
+							<div>
+								<Button onClick={ () => onPaginationChangeHandler( pagination + 1 ) } >
+									<Dashicon icon="controls-forward"/>
+								</Button>
+							</div>
+						) }
+
 					</div>
 				) }
 
