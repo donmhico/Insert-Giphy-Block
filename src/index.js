@@ -98,7 +98,11 @@ registerBlockType( 'donmhico/giphy-block', {
 	 */
 	save: props => {
 		return (
-			<img src={ props.attributes.gif.src } />
+			props.attributes.gif ? (
+				props.attributes.gif.src ? (
+					<img src={ props.attributes.gif.src }/>
+				) : null
+			) : null
 		);
 	},
 } );
