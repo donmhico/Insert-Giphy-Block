@@ -1,4 +1,4 @@
-import { Component } from '@wordpress/element';
+import { Component, Fragment } from '@wordpress/element';
 import { AlignmentToolbar, BlockControls, BlockAlignmentToolbar } from '@wordpress/editor';
 import { addQueryArgs } from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
@@ -256,6 +256,16 @@ export default class Edit extends Component {
 			error,
 		} = this.state;
 
+		let showApiKeyField = false;
+		if ( apiKey.length === 0 || isTypingApiKey ) {
+			showApiKeyField = true;
+		}
+
+		let showGif = false;
+		if ( gif && gif.src && ! isSearching ) {
+			showGif = true;
+		}
+
 		return (
 			<div className={ className }>
 				<GiphyInspectorControl
@@ -265,25 +275,33 @@ export default class Edit extends Component {
 					apiKey={ apiKey }
 				/>
 
-				<BlockControls>
-					<BlockAlignmentToolbar
-						value={ blockAlignment }
-						onChange={ blockAlignment => setAttributes( { blockAlignment } ) }
-					/>
-					<AlignmentToolbar
-						value={ textAlignment }
-						onChange={ textAlignment => setAttributes( { textAlignment } ) }
-					/>
-				</BlockControls>
-
-				{ apiKey.length === 0 || isTypingApiKey ? (
+				{ showApiKeyField ? (
 					<ApiKeyField
 						isApiKeySaved={ isApiKeySaved }
 						isLoading={ isProcessingApiKey }
 						onApiKeyChange={ this.onApiKeyChange }
 						apiKey={ apiKey }
 					/>
-				) : isSearching ? (
+				) : showGif ? (
+					<Fragment>
+						<BlockControls>
+							<BlockAlignmentToolbar
+								value={ blockAlignment }
+								onChange={ blockAlignment => setAttributes( { blockAlignment } ) }
+							/>
+							<AlignmentToolbar
+								value={ textAlignment }
+								onChange={ textAlignment => setAttributes( { textAlignment } ) }
+							/>
+						</BlockControls>
+
+						<Gif
+							style={ { textAlign: textAlignment } }
+							onRemoveClickHandler={ this.onRemoveClickHandler }
+							gif={ gif.src }
+						/>
+					</Fragment>
+				) : (
 					<SearchGiphy
 						search={ search }
 						onSearchChangeHandler={ this.onSearchChangeHandler }
@@ -294,12 +312,6 @@ export default class Edit extends Component {
 						onPaginationChangeHandler={ this.onPaginationChangeHandler }
 						maxPage={ maxPage }
 						error={ error }
-					/>
-				) : (
-					<Gif
-						style={ { textAlign: textAlignment } }
-						onRemoveClickHandler={ this.onRemoveClickHandler }
-						gif={ gif.src }
 					/>
 				) }
 			</div>
