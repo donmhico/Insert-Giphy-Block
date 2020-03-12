@@ -1,5 +1,6 @@
+import { Button, Icon, Spinner, TextControl } from '@wordpress/components';
 import { Component, Fragment } from '@wordpress/element';
-import { TextControl, Spinner, Button, Dashicon } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import Gallery from "react-photo-gallery";
 
 export default class SearchGiphy extends Component {
@@ -35,6 +36,7 @@ export default class SearchGiphy extends Component {
 			<Fragment>
 				<TextControl
 					label="Search GIF"
+					placeholder="Search GIF"
 					value={ search }
 					onChange={ ( search ) => {
 						onSearchChangeHandler( search );
@@ -42,7 +44,9 @@ export default class SearchGiphy extends Component {
 				/>
 
 				{ isLoading && (
-					<Spinner />
+					<div className="giphy_spinner_container">
+						<Spinner />
+					</div>
 				) }
 
 				{ result_gifs && result_gifs.length && (
@@ -58,15 +62,16 @@ export default class SearchGiphy extends Component {
 				{ gifs.length > 0 && (
 					<div className="giphy_nav_controls">
 						{ pagination > 1 && (
-							<div>
-								<Button onClick={ () => onPaginationChangeHandler( pagination - 1 ) } >
-									<Dashicon icon="controls-back"/>
+							<div className="giphy_nav_controls__control">
+								<Button isLink onClick={ () => onPaginationChangeHandler( pagination - 1 ) } >
+									<Icon size="32" icon="controls-back"/>
 								</Button>
 							</div>
 						) }
 
-						<div>
+						<div className="giphy_nav_controls__control">
 							<TextControl
+								className="giphy_nav_field"
 								onChange={ ( input ) => {
 									if ( isNaN( input ) || input <= 0 ) {
 										return;
@@ -78,15 +83,17 @@ export default class SearchGiphy extends Component {
 
 									onPaginationChangeHandler( input );
 								} }
-								value={ pagination }/>
+								value={ pagination }
+							/>
 						</div>
-						<div>/</div>
-						<div>{ maxPage }</div>
+
+						<div className="giphy_nav_controls__control">/</div>
+						<div className="giphy_nav_controls__control">{ maxPage }</div>
 
 						{ pagination < maxPage && (
-							<div>
-								<Button onClick={ () => onPaginationChangeHandler( pagination + 1 ) } >
-									<Dashicon icon="controls-forward"/>
+							<div className="giphy_nav_controls__control">
+								<Button isLink onClick={ () => onPaginationChangeHandler( pagination + 1 ) } >
+									<Icon size="32" icon="controls-forward"/>
 								</Button>
 							</div>
 						) }

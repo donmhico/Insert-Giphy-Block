@@ -3,11 +3,34 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
+.wp-block-donmhico-giphy-block .giphy_spinner_container {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	padding-top: 8px;
+}
 
-.wp-block-donmhico-giphy-block {
-	border: 1px dotted #f00;
+.wp-block-donmhico-giphy-block .giphy_spinner_container .components-spinner {
+	float: none;
+	margin: 0;
 }
 
 .wp-block-donmhico-giphy-block .giphy_nav_controls {
+	align-items: center;
 	display: flex;
+	justify-content: center;
+	margin-top: 8px;
+}
+
+.wp-block-donmhico-giphy-block .giphy_nav_controls .giphy_nav_controls__control {
+	display: inline-flex;
+	margin: 0 3px;
+}
+
+.wp-block-donmhico-giphy-block .giphy_nav_controls .giphy_nav_controls__control .giphy_nav_field .components-base-control__field {
+	margin-bottom: 0;
+}
+
+.wp-block-donmhico-giphy-block .giphy_nav_controls .giphy_nav_controls__control .giphy_nav_field input {
+	width: 64px;
 }
