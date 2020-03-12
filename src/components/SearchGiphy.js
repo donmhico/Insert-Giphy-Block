@@ -18,6 +18,7 @@ export default class SearchGiphy extends Component {
 			pagination,
 			onPaginationChangeHandler,
 			maxPage,
+			error,
 		} = this.props;
 
 		let result_gifs;
@@ -46,6 +47,14 @@ export default class SearchGiphy extends Component {
 				{ isLoading && (
 					<div className="giphy_spinner_container">
 						<Spinner />
+					</div>
+				) }
+
+				{ error && (
+					<div className="components-notice is-error">
+						<div className="components-notice__content">
+							{ error.message }
+						</div>
 					</div>
 				) }
 

@@ -23,6 +23,7 @@ export default class Edit extends Component {
 			isProcessingApiKey: true, // If currently fetching or saving the API Key.
 			isApiKeySaved: false, // If API Key was saved.
 			maxPage: 0, // Max results page.
+			error: false, // TODO - error.
 		};
 
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
@@ -99,8 +100,11 @@ export default class Edit extends Component {
 
 		const results = await this.fetchGiphy( search, offset );
 
-		if ( 200 !== results.meta.status ) {
-			// TODO handle error.
+		if ( ! results.meta || 200 !== results.meta.status ) {
+			this.setState( {
+				error: results,
+				isLoading: false,
+			} );
 			return;
 		}
 
@@ -113,6 +117,7 @@ export default class Edit extends Component {
 		gifs[ this.state.pagination ] = results.data;
 
 		let newState = {
+			error: false,
 			isLoading: false,
 			gifs: gifs,
 		};
@@ -248,6 +253,7 @@ export default class Edit extends Component {
 			isProcessingApiKey,
 			isApiKeySaved,
 			maxPage,
+			error,
 		} = this.state;
 
 		return (
@@ -287,6 +293,7 @@ export default class Edit extends Component {
 						pagination={ pagination }
 						onPaginationChangeHandler={ this.onPaginationChangeHandler }
 						maxPage={ maxPage }
+						error={ error }
 					/>
 				) : (
 					<Gif
