@@ -1,14 +1,14 @@
-import { __ } from '@wordpress/i18n';
-import { Component, Fragment } from '@wordpress/element';
 import { TextControl, Spinner } from '@wordpress/components';
+import { Component, Fragment } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 export default class ApiKeyField extends Component {
 	render() {
 		const {
-			isLoading,
 			apiKey,
-			onApiKeyChange,
 			isApiKeySaved,
+			isLoading,
+			onApiKeyChange,
 		} = this.props;
 
 		return (
@@ -18,8 +18,8 @@ export default class ApiKeyField extends Component {
 				) : (
 					<TextControl
 						label={ __( 'Enter Giphy API Key', 'giphy-block' ) }
-						value={ apiKey }
 						onChange={ apiKey => onApiKeyChange( apiKey ) }
+						value={ apiKey }
 					/>
 				) }
 				{ isApiKeySaved && (

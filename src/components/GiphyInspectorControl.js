@@ -1,7 +1,8 @@
-import { __ } from '@wordpress/i18n';
-import { Component, Fragment } from '@wordpress/element';
-import { InspectorControls } from '@wordpress/editor';
 import { PanelBody } from '@wordpress/components';
+import { InspectorControls } from '@wordpress/editor';
+import { Component, Fragment } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+
 import ApiKeyField from "./ApiKeyField";
 
 export default class GiphyInspectorControl extends Component {
@@ -10,8 +11,9 @@ export default class GiphyInspectorControl extends Component {
 			<Fragment>
 				<InspectorControls>
 					<PanelBody
+						initialOpen
 						title={ __( 'Giphy Block Settings', 'giphy-block' ) }
-						initialOpen>
+					>
 						<ApiKeyField { ...this.props } />
 					</PanelBody>
 				</InspectorControls>

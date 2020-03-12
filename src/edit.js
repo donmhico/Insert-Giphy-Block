@@ -1,53 +1,61 @@
-import { Component, Fragment } from '@wordpress/element';
-import { AlignmentToolbar, BlockControls, BlockAlignmentToolbar } from '@wordpress/editor';
-import { addQueryArgs } from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
+import { AlignmentToolbar, BlockAlignmentToolbar, BlockControls } from '@wordpress/editor';
+import { Component, Fragment } from '@wordpress/element';
+import { addQueryArgs } from '@wordpress/url';
 import { debounce, delay } from 'lodash';
 
+import ApiKeyField from "./components/ApiKeyField";
+import Gif from "./components/Gif";
 import GiphyInspectorControl from "./components/GiphyInspectorControl";
 import SearchGiphy from "./components/SearchGiphy";
-import Gif from "./components/Gif";
-import ApiKeyField from "./components/ApiKeyField";
 
 export default class Edit extends Component {
 	constructor( props ) {
 		super( props );
 
 		this.state = {
-			isLoading: false, // If currently fetching from Giphy.
-			isSearching: !props.attributes.gif, // If we need to show the search field.
-			gifs: [], // Cache results from Giphy.
-			pagination: 1, // Current pagination.
 			apiKey: '', // Giphy API Key. Set in the InspectorControls and globally as a DB option.
-			isTypingApiKey: false, // If API key currently being typed.
-			isProcessingApiKey: true, // If currently fetching or saving the API Key.
+			error: false, // Error on fetching Giphy request.
+			gifs: [], // Cache results from Giphy.
 			isApiKeySaved: false, // If API Key was saved.
+			isLoading: false, // If currently fetching from Giphy.
+			isProcessingApiKey: true, // If currently fetching or saving the API Key.
+			isSearching: !props.attributes.gif, // If we need to show the search field.
+			isTypingApiKey: false, // If API key currently being typed.
 			maxPage: 0, // Max results page.
-			error: false, // TODO - error.
+			pagination: 1, // Current pagination.
 		};
 
 		this.GIPHY_ENDPOINT = 'https://api.giphy.com/v1/gifs/search';
-		this.GIPHY_RESULTS_LIMIT = 5;
+		this.GIPHY_RESULTS_LIMIT = 10;
 
-		this.onSearchChangeHandler = this.onSearchChangeHandler.bind( this );
 		this.fetchGiphy = this.fetchGiphy.bind( this );
-		// Use debounce to prevent multiple concurrent request to Giphy.
-		this.onSearchChange = debounce( this.onSearchChange.bind( this ), 500 );
-		this.onGiphyClick = this.onGiphyClick.bind( this );
-
-		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
 
 		this.onApiKeyChange = this.onApiKeyChange.bind( this );
 		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 500 );
+
+		this.onSearchChangeHandler = this.onSearchChangeHandler.bind( this );
+		// Use debounce to prevent multiple concurrent request to Giphy.
+		this.onSearchChange = debounce( this.onSearchChange.bind( this ), 500 );
+
+		this.onGiphyClick = this.onGiphyClick.bind( this );
+
+		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
 
 		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind( this );
 
 		this.onPaginationChangeHandler = this.onPaginationChangeHandler.bind( this );
 	}
 
+	/**
+	 * Fetch the API key on component mount.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @returns {Promise<void>}
+	 */
 	async componentDidMount() {
 		const apiKey = await this.fetchApiKey();
-		// TODO - Handle error.
 
 		this.setState( {
 			apiKey,
@@ -55,6 +63,11 @@ export default class Edit extends Component {
 		} );
 	}
 
+	/**
+	 * Cancel debounce invocation.
+	 *
+	 * @since 1.0.0
+	 */
 	componentWillUnmount() {
 		this.onSearchChange.cancel();
 		this.onApiKeyChangeHandler.cancel();
@@ -151,19 +164,40 @@ export default class Edit extends Component {
 			.catch( error => error );
 	};
 
+	/**
+	 * Invoked when a GIF was selected.
+	 *
+	 * This will set the selected `photo` sa `gif` attribute
+	 * and set the state `isSearching` to false to render the selected GIF
+	 * instead of the "search gif" field.
+	 *
+	 * @param event
+	 * @param photo
+	 */
 	onGiphyClick( event, { photo } ) {
 		// Save the selected photo data as `gif` in the DB.
 		this.props.setAttributes( { gif: photo } );
 		this.setState( { isSearching: false } );
 	}
 
+	/**
+	 * Invoked immediately whenever the user enter a new value in the search
+	 * gif field.
+	 *
+	 * 1. This will reset the `state` to remove previous search results.
+	 * 2. Set the passed `search` which is the value of the search field as `search` attribute.
+	 * 3. Call this.onSearchChange().
+	 *
+	 * @param search
+	 */
 	onSearchChangeHandler( search ) {
-		// Reset the state.
+		// Reset the state empty previous search results..
 		this.setState( {
-			isLoading: true,
+			error: false,
 			gifs: [],
-			pagination: 1,
+			isLoading: true,
 			maxPage: 0,
+			pagination: 1,
 		} );
 
 		// Save the search keyword as `search` in the DB.
@@ -171,8 +205,18 @@ export default class Edit extends Component {
 		this.onSearchChange();
 	}
 
+	/**
+	 * Invoked when the pagination was changed, either by changing the page in the
+	 * pagination field or clicking the nav buttons.
+	 *
+	 * @param pagination
+	 */
 	onPaginationChangeHandler( pagination ) {
-		this.setState( { pagination: Number( pagination ), isLoading: true } );
+		this.setState({
+			isLoading: true,
+			pagination: Number( pagination ),
+		} );
+
 		this.onSearchChange();
 	}
 
@@ -182,15 +226,15 @@ export default class Edit extends Component {
 	 */
 	onRemoveClickHandler() {
 		this.setState( {
-			isSearching: true,
 			isLoading: true,
+			isSearching: true,
 		} );
 
 		this.onSearchChange();
 	}
 
 	/**
-	 * Invoked when the API Key field in Inspector Control was changed.
+	 * Invoked when the API Key field was changed.
 	 *
 	 * @param apiKey string
 	 */
@@ -212,15 +256,16 @@ export default class Edit extends Component {
 		this.setState( {
 			isProcessingApiKey: true
 		} );
-		// TODO - Handle error.
 
 		const saveApiKey = await this.saveApiKey( this.state.apiKey );
 		this.setState( {
-			isTypingApiKey: false,
-			isProcessingApiKey: false,
 			isApiKeySaved: true,
+			isProcessingApiKey: false,
+			isTypingApiKey: false,
 		} );
 
+		// The invocation of this.updateIsApiKeySavedToFalse is delayed for 3 seconds to give time
+		// for the user to see the "Saved" UI before it disappears.
 		delay( this.updateIsApiKeySavedToFalse, 3000 );
 	}
 
@@ -234,26 +279,26 @@ export default class Edit extends Component {
 	render() {
 		const {
 			attributes: {
-				search,
-				gif,
 				blockAlignment,
-				textAlignment
+				gif,
+				search,
+				textAlignment,
 			},
 			className,
 			setAttributes
 		} = this.props;
 
 		const {
-			isLoading,
-			isSearching,
-			gifs,
-			pagination,
 			apiKey,
-			isTypingApiKey,
-			isProcessingApiKey,
-			isApiKeySaved,
-			maxPage,
 			error,
+			gifs,
+			isApiKeySaved,
+			isLoading,
+			isProcessingApiKey,
+			isSearching,
+			isTypingApiKey,
+			maxPage,
+			pagination,
 		} = this.state;
 
 		let showApiKeyField = false;
@@ -269,49 +314,49 @@ export default class Edit extends Component {
 		return (
 			<div className={ className }>
 				<GiphyInspectorControl
+					apiKey={ apiKey }
 					isApiKeySaved={ isApiKeySaved }
 					isLoading={ isProcessingApiKey }
 					onApiKeyChange={ this.onApiKeyChange }
-					apiKey={ apiKey }
 				/>
 
 				{ showApiKeyField ? (
 					<ApiKeyField
+						apiKey={ apiKey }
 						isApiKeySaved={ isApiKeySaved }
 						isLoading={ isProcessingApiKey }
 						onApiKeyChange={ this.onApiKeyChange }
-						apiKey={ apiKey }
 					/>
 				) : showGif ? (
 					<Fragment>
 						<BlockControls>
 							<BlockAlignmentToolbar
-								value={ blockAlignment }
 								onChange={ blockAlignment => setAttributes( { blockAlignment } ) }
+								value={ blockAlignment }
 							/>
 							<AlignmentToolbar
-								value={ textAlignment }
 								onChange={ textAlignment => setAttributes( { textAlignment } ) }
+								value={ textAlignment }
 							/>
 						</BlockControls>
 
 						<Gif
-							style={ { textAlign: textAlignment } }
-							onRemoveClickHandler={ this.onRemoveClickHandler }
 							gif={ gif.src }
+							onRemoveClickHandler={ this.onRemoveClickHandler }
+							style={ { textAlign: textAlignment } }
 						/>
 					</Fragment>
 				) : (
 					<SearchGiphy
-						search={ search }
-						onSearchChangeHandler={ this.onSearchChangeHandler }
-						isLoading={ isLoading }
-						gifs={ gifs }
-						onGiphyClick={ this.onGiphyClick }
-						pagination={ pagination }
-						onPaginationChangeHandler={ this.onPaginationChangeHandler }
-						maxPage={ maxPage }
 						error={ error }
+						gifs={ gifs }
+						isLoading={ isLoading }
+						onGiphyClick={ this.onGiphyClick }
+						onPaginationChangeHandler={ this.onPaginationChangeHandler }
+						onSearchChangeHandler={ this.onSearchChangeHandler }
+						maxPage={ maxPage }
+						pagination={ pagination }
+						search={ search }
 					/>
 				) }
 			</div>

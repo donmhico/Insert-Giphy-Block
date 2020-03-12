@@ -1,13 +1,24 @@
-import { Component } from '@wordpress/element';
 import { Button, Icon } from '@wordpress/components';
+import { Component } from '@wordpress/element';
 
 export default class Gif extends Component {
 	render() {
+		const {
+			gif,
+			onRemoveClickHandler,
+			style,
+		} = this.props;
+
 		return (
-			<div style={ this.props.style }>
-				<img src={ this.props.gif } />
+			<div style={ style }>
+				<img src={ gif } />
 				<div>
-					<Button isDefault onClick={ this.props.onRemoveClickHandler }><Icon icon="trash"/></Button>
+					<Button
+						isDefault
+						onClick={ onRemoveClickHandler }
+					>
+						<Icon icon="trash"/>
+					</Button>
 				</div>
 			</div>
 		)
