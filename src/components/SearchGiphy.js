@@ -57,12 +57,58 @@ export default class SearchGiphy extends Component {
 					</div>
 				) }
 
-				{ result_gifs && result_gifs.length && (
+				{ result_gifs && result_gifs.length > 0 && (
 					<Fragment>
 						<Gallery
 							onClick={ onGiphyClick }
 							photos={ result_gifs }
 						/>
+
+						<div className="giphy_nav_controls">
+							{ pagination > 1 && (
+								<div className="giphy_nav_controls__control">
+									<Button
+										isLink
+										onClick={ () => onPaginationChangeHandler( pagination - 1 ) }
+									>
+										<Icon size="32" icon="controls-back"/>
+									</Button>
+								</div>
+							) }
+
+							<div className="giphy_nav_controls__control">
+								<TextControl
+									className="giphy_nav_field"
+									onChange={ ( input ) => {
+										if ( isNaN( input ) || input <= 0 ) {
+											return 1;
+										}
+
+										if ( input > maxPage ) {
+											input = maxPage;
+										}
+
+										onPaginationChangeHandler( input );
+									} }
+									value={ pagination }
+								/>
+							</div>
+
+							<div className="giphy_nav_controls__control">/</div>
+							<div className="giphy_nav_controls__control">{ maxPage }</div>
+
+							{ pagination < maxPage && (
+								<div className="giphy_nav_controls__control">
+									<Button
+										isLink
+										onClick={ () => onPaginationChangeHandler( pagination + 1 ) }
+									>
+										<Icon size="32" icon="controls-forward"/>
+									</Button>
+								</div>
+							) }
+
+						</div>
 					</Fragment>
 				) }
 
@@ -73,54 +119,6 @@ export default class SearchGiphy extends Component {
 							search
 						) }
 					</p>
-				) }
-
-				{ gifs.length > 0 && (
-					<div className="giphy_nav_controls">
-						{ pagination > 1 && (
-							<div className="giphy_nav_controls__control">
-								<Button
-									isLink
-									onClick={ () => onPaginationChangeHandler( pagination - 1 ) }
-								>
-									<Icon size="32" icon="controls-back"/>
-								</Button>
-							</div>
-						) }
-
-						<div className="giphy_nav_controls__control">
-							<TextControl
-								className="giphy_nav_field"
-								onChange={ ( input ) => {
-									if ( isNaN( input ) || input <= 0 ) {
-										return 1;
-									}
-
-									if ( input > maxPage ) {
-										input = maxPage;
-									}
-
-									onPaginationChangeHandler( input );
-								} }
-								value={ pagination }
-							/>
-						</div>
-
-						<div className="giphy_nav_controls__control">/</div>
-						<div className="giphy_nav_controls__control">{ maxPage }</div>
-
-						{ pagination < maxPage && (
-							<div className="giphy_nav_controls__control">
-								<Button
-									isLink
-									onClick={ () => onPaginationChangeHandler( pagination + 1 ) }
-								>
-									<Icon size="32" icon="controls-forward"/>
-								</Button>
-							</div>
-						) }
-
-					</div>
 				) }
 
 			</Fragment>
