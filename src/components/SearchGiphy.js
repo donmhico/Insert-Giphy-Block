@@ -1,5 +1,6 @@
 import { Button, Icon, Spinner, TextControl } from '@wordpress/components';
 import { Component, Fragment } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 
 import Gallery from "react-photo-gallery";
 
@@ -36,9 +37,9 @@ export default class SearchGiphy extends Component {
 		return (
 			<Fragment>
 				<TextControl
-					label="Search GIF"
+					label={ __( 'Search GIF', 'giphy-block' ) }
 					onChange={ onSearchChangeHandler }
-					placeholder="Search GIF"
+					placeholder={ __( 'Search GIF', 'giphy-block' ) }
 					value={ search }
 				/>
 
@@ -66,7 +67,12 @@ export default class SearchGiphy extends Component {
 				) }
 
 				{ result_gifs && result_gifs.length === 0 && (
-					<p>{ `Nothing found for '${search}'.` }</p>
+					<p>
+						{ sprintf(
+							__( 'Nothing found for "%s".', 'giphy-block' ),
+							search
+						) }
+					</p>
 				) }
 
 				{ gifs.length > 0 && (

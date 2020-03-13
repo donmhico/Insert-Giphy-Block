@@ -17,8 +17,8 @@ export default class GiphyInspectorControl extends Component {
 						<ApiKeyField { ...this.props } />
 						<PanelRow>
 							<TextControl
-								label="GIF Alt"
-								placeholder="Alt"
+								label={ __( 'GIF Alt', 'giphy-block' ) }
+								placeholder={ __( 'Alt', 'giphy-block' ) }
 								onChange={ this.props.onAltChangeHandler }
 								value={ this.props.alt }
 							/>
