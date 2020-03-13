@@ -1,4 +1,4 @@
-import { PanelBody } from '@wordpress/components';
+import { PanelBody, PanelRow, TextControl } from '@wordpress/components';
 import { InspectorControls } from '@wordpress/editor';
 import { Component, Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -15,6 +15,14 @@ export default class GiphyInspectorControl extends Component {
 						title={ __( 'Giphy Block Settings', 'giphy-block' ) }
 					>
 						<ApiKeyField { ...this.props } />
+						<PanelRow>
+							<TextControl
+								label="GIF Alt"
+								placeholder="Alt"
+								onChange={ this.props.onAltChangeHandler }
+								value={ this.props.alt }
+							/>
+						</PanelRow>
 					</PanelBody>
 				</InspectorControls>
 			</Fragment>

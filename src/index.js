@@ -48,19 +48,22 @@ registerBlockType( 'donmhico/giphy-block', {
 	icon: 'smiley',
 
 	attributes: {
-		textAlignment: {
+		alt: {
 			type: 'string',
 		},
 		blockAlignment: {
 			type: 'string',
 			default: 'wide',
 		},
-		search: {
-			type: 'string'
-		},
 		gif: {
-			type: 'object'
-		}
+			type: 'object',
+		},
+		search: {
+			type: 'string',
+		},
+		textAlignment: {
+			type: 'string',
+		},
 	},
 	getEditWrapperProps( { blockAlignment } ) {
 		if ( 'left' === blockAlignment || 'right' === blockAlignment || 'full' === blockAlignment ) {
@@ -98,9 +101,10 @@ registerBlockType( 'donmhico/giphy-block', {
 	 */
 	save: props => {
 		const {
+			alt,
 			blockAlignment,
+			gif,
 			textAlignment,
-			gif
 		} = props.attributes;
 
 		return (
@@ -110,7 +114,7 @@ registerBlockType( 'donmhico/giphy-block', {
 						className={ `align${blockAlignment}` }
 						style={ { textAlign: textAlignment } }
 					>
-						<img src={ gif.src }/>
+						<img alt={ alt } src={ gif.src }/>
 					</div>
 				) : null
 			) : null

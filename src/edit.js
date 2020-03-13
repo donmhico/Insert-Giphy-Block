@@ -45,6 +45,8 @@ export default class Edit extends Component {
 		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind( this );
 
 		this.onPaginationChangeHandler = this.onPaginationChangeHandler.bind( this );
+
+		this.onAltChangeHandler = this.onAltChangeHandler.bind( this );
 	}
 
 	/**
@@ -269,6 +271,10 @@ export default class Edit extends Component {
 		delay( this.updateIsApiKeySavedToFalse, 3000 );
 	}
 
+	onAltChangeHandler( alt ) {
+		this.props.setAttributes( { alt } );
+	}
+
 	/**
 	 * Setting the state `isApiKeySaved` to false will hide the 'Saved' message.
 	 */
@@ -279,6 +285,7 @@ export default class Edit extends Component {
 	render() {
 		const {
 			attributes: {
+				alt,
 				blockAlignment,
 				gif,
 				search,
@@ -314,9 +321,11 @@ export default class Edit extends Component {
 		return (
 			<div className={ className }>
 				<GiphyInspectorControl
+					alt={ alt }
 					apiKey={ apiKey }
 					isApiKeySaved={ isApiKeySaved }
 					isLoading={ isProcessingApiKey }
+					onAltChangeHandler={ this.onAltChangeHandler }
 					onApiKeyChange={ this.onApiKeyChange }
 				/>
 
