@@ -23,7 +23,9 @@ export default class ApiKeyField extends Component {
 					/>
 				) }
 				{ isApiKeySaved && (
-					<div>{ __( 'Saved', 'giphy-block' ) }</div>
+					<div className="giphy-block-api-saved">
+						{ __( 'Saved', 'giphy-block' ) }
+					</div>
 				) }
 			</Fragment>
 		);

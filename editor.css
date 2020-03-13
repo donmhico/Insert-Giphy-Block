@@ -34,3 +34,9 @@
 .wp-block-donmhico-giphy-block .giphy_nav_controls .giphy_nav_controls__control .giphy_nav_field input {
 	width: 64px;
 }
+
+.giphy-block-api-saved {
+	background-color: #eff9f1;
+	border-left: 4px solid #4ab866;
+	padding: 8px 12px;
+}
