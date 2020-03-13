@@ -26,9 +26,9 @@ export default class SearchGiphy extends Component {
 			result_gifs = [];
 			result_gifs = gifs[ pagination ].map( ( gif_data ) => {
 				return {
-					height: gif_data.images.downsized_medium.height,
-					src: gif_data.images.downsized_medium.url,
-					width: gif_data.images.downsized_medium.width,
+					height: gif_data.images.original.height,
+					src: gif_data.images.original.url,
+					width: gif_data.images.original.width,
 				};
 			} )
 		}
