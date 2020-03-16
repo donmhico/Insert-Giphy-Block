@@ -345,14 +345,14 @@ export default class Edit extends Component {
 					<Fragment>
 						<BlockControls>
 							<BlockAlignmentToolbar
-								onChange={ ( newBlockAlignment ) =>
-									setAttributes( { newBlockAlignment } )
+								onChange={ ( blockAlignment ) =>
+									setAttributes( { blockAlignment } )
 								}
 								value={ blockAlignment }
 							/>
 							<AlignmentToolbar
-								onChange={ ( newTextAlignment ) =>
-									setAttributes( { newTextAlignment } )
+								onChange={ ( textAlignment ) =>
+									setAttributes( { textAlignment } )
 								}
 								value={ textAlignment }
 							/>
