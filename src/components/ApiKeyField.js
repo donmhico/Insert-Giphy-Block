@@ -4,12 +4,7 @@ import { __ } from '@wordpress/i18n';
 
 export default class ApiKeyField extends Component {
 	render() {
-		const {
-			apiKey,
-			isApiKeySaved,
-			isLoading,
-			onApiKeyChange,
-		} = this.props;
+		const { apiKey, isApiKeySaved, isLoading, onApiKeyChange } = this.props;
 
 		return (
 			<Fragment>
@@ -18,7 +13,7 @@ export default class ApiKeyField extends Component {
 				) : (
 					<TextControl
 						label={ __( 'Enter Giphy API Key', 'giphy-block' ) }
-						onChange={ apiKey => onApiKeyChange( apiKey ) }
+						onChange={ onApiKeyChange }
 						value={ apiKey }
 					/>
 				) }

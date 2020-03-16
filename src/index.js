@@ -66,7 +66,11 @@ registerBlockType( 'donmhico/giphy-block', {
 		},
 	},
 	getEditWrapperProps( { blockAlignment } ) {
-		if ( 'left' === blockAlignment || 'right' === blockAlignment || 'full' === blockAlignment ) {
+		if (
+			'left' === blockAlignment ||
+			'right' === blockAlignment ||
+			'full' === blockAlignment
+		) {
 			return { 'data-align': blockAlignment };
 		}
 	},
@@ -99,25 +103,18 @@ registerBlockType( 'donmhico/giphy-block', {
 	 *
 	 * @return {WPElement} Element to render.
 	 */
-	save: props => {
-		const {
-			alt,
-			blockAlignment,
-			gif,
-			textAlignment,
-		} = props.attributes;
+	save: ( props ) => {
+		const { alt, blockAlignment, gif, textAlignment } = props.attributes;
 
-		return (
-			gif ? (
-				gif.src ? (
-					<div
-						className={ `align${blockAlignment}` }
-						style={ { textAlign: textAlignment } }
-					>
-						<img alt={ alt } src={ gif.src }/>
-					</div>
-				) : null
+		return gif ? (
+			gif.src ? (
+				<div
+					className={ `align${ blockAlignment }` }
+					style={ { textAlign: textAlignment } }
+				>
+					<img alt={ alt } src={ gif.src } />
+				</div>
 			) : null
-		);
+		) : null;
 	},
 } );

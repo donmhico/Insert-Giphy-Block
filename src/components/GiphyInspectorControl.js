@@ -3,7 +3,7 @@ import { InspectorControls } from '@wordpress/editor';
 import { Component, Fragment } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import ApiKeyField from "./ApiKeyField";
+import ApiKeyField from './ApiKeyField';
 
 export default class GiphyInspectorControl extends Component {
 	render() {

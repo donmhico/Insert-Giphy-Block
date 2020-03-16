@@ -1,14 +1,10 @@
 import { Button, Icon, Spinner, TextControl } from '@wordpress/components';
 import { Component, Fragment } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
-import Gallery from "react-photo-gallery";
+import Gallery from 'react-photo-gallery';
 
 export default class SearchGiphy extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
 		const {
 			error,
@@ -22,16 +18,16 @@ export default class SearchGiphy extends Component {
 			search,
 		} = this.props;
 
-		let result_gifs;
+		let resultGifs;
 		if ( gifs[ pagination ] ) {
-			result_gifs = [];
-			result_gifs = gifs[ pagination ].map( ( gif_data ) => {
+			resultGifs = [];
+			resultGifs = gifs[ pagination ].map( ( gifData ) => {
 				return {
-					height: gif_data.images.original.height,
-					src: gif_data.images.original.url,
-					width: gif_data.images.original.width,
+					height: gifData.images.original.height,
+					src: gifData.images.original.url,
+					width: gifData.images.original.width,
 				};
-			} )
+			} );
 		}
 
 		return (
@@ -57,11 +53,11 @@ export default class SearchGiphy extends Component {
 					</div>
 				) }
 
-				{ result_gifs && result_gifs.length > 0 && (
+				{ resultGifs && resultGifs.length > 0 && (
 					<Fragment>
 						<Gallery
 							onClick={ onGiphyClick }
-							photos={ result_gifs }
+							photos={ resultGifs }
 						/>
 
 						<div className="giphy_nav_controls">
@@ -69,9 +65,13 @@ export default class SearchGiphy extends Component {
 								<div className="giphy_nav_controls__control">
 									<Button
 										isLink
-										onClick={ () => onPaginationChangeHandler( pagination - 1 ) }
+										onClick={ () =>
+											onPaginationChangeHandler(
+												pagination - 1
+											)
+										}
 									>
-										<Icon size="32" icon="controls-back"/>
+										<Icon size="32" icon="controls-back" />
 									</Button>
 								</div>
 							) }
@@ -95,24 +95,32 @@ export default class SearchGiphy extends Component {
 							</div>
 
 							<div className="giphy_nav_controls__control">/</div>
-							<div className="giphy_nav_controls__control">{ maxPage }</div>
+							<div className="giphy_nav_controls__control">
+								{ maxPage }
+							</div>
 
 							{ pagination < maxPage && (
 								<div className="giphy_nav_controls__control">
 									<Button
 										isLink
-										onClick={ () => onPaginationChangeHandler( pagination + 1 ) }
+										onClick={ () =>
+											onPaginationChangeHandler(
+												pagination + 1
+											)
+										}
 									>
-										<Icon size="32" icon="controls-forward"/>
+										<Icon
+											size="32"
+											icon="controls-forward"
+										/>
 									</Button>
 								</div>
 							) }
-
 						</div>
 					</Fragment>
 				) }
 
-				{ result_gifs && result_gifs.length === 0 && (
+				{ resultGifs && resultGifs.length === 0 && (
 					<p>
 						{ sprintf(
 							__( 'Nothing found for "%s".', 'giphy-block' ),
@@ -120,7 +128,6 @@ export default class SearchGiphy extends Component {
 						) }
 					</p>
 				) }
-
 			</Fragment>
 		);
 	}

@@ -1,13 +1,17 @@
 import apiFetch from '@wordpress/api-fetch';
-import { AlignmentToolbar, BlockAlignmentToolbar, BlockControls } from '@wordpress/editor';
+import {
+	AlignmentToolbar,
+	BlockAlignmentToolbar,
+	BlockControls,
+} from '@wordpress/editor';
 import { Component, Fragment } from '@wordpress/element';
 import { addQueryArgs } from '@wordpress/url';
 import { debounce, delay } from 'lodash';
 
-import ApiKeyField from "./components/ApiKeyField";
-import Gif from "./components/Gif";
-import GiphyInspectorControl from "./components/GiphyInspectorControl";
-import SearchGiphy from "./components/SearchGiphy";
+import ApiKeyField from './components/ApiKeyField';
+import Gif from './components/Gif';
+import GiphyInspectorControl from './components/GiphyInspectorControl';
+import SearchGiphy from './components/SearchGiphy';
 
 export default class Edit extends Component {
 	constructor( props ) {
@@ -20,7 +24,7 @@ export default class Edit extends Component {
 			isApiKeySaved: false, // If API Key was saved.
 			isLoading: false, // If currently fetching from Giphy.
 			isProcessingApiKey: true, // If currently fetching or saving the API Key.
-			isSearching: !props.attributes.gif, // If we need to show the search field.
+			isSearching: ! props.attributes.gif, // If we need to show the search field.
 			isTypingApiKey: false, // If API key currently being typed.
 			maxPage: 0, // Max results page.
 			pagination: 1, // Current pagination.
@@ -32,7 +36,10 @@ export default class Edit extends Component {
 		this.fetchGiphy = this.fetchGiphy.bind( this );
 
 		this.onApiKeyChange = this.onApiKeyChange.bind( this );
-		this.onApiKeyChangeHandler = debounce( this.onApiKeyChangeHandler.bind( this ), 500 );
+		this.onApiKeyChangeHandler = debounce(
+			this.onApiKeyChangeHandler.bind( this ),
+			500
+		);
 
 		this.onSearchChangeHandler = this.onSearchChangeHandler.bind( this );
 		// Use debounce to prevent multiple concurrent request to Giphy.
@@ -42,9 +49,13 @@ export default class Edit extends Component {
 
 		this.onRemoveClickHandler = this.onRemoveClickHandler.bind( this );
 
-		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind( this );
+		this.updateIsApiKeySavedToFalse = this.updateIsApiKeySavedToFalse.bind(
+			this
+		);
 
-		this.onPaginationChangeHandler = this.onPaginationChangeHandler.bind( this );
+		this.onPaginationChangeHandler = this.onPaginationChangeHandler.bind(
+			this
+		);
 
 		this.onAltChangeHandler = this.onAltChangeHandler.bind( this );
 	}
@@ -61,7 +72,7 @@ export default class Edit extends Component {
 
 		this.setState( {
 			apiKey,
-			isProcessingApiKey: false
+			isProcessingApiKey: false,
 		} );
 	}
 
@@ -76,21 +87,19 @@ export default class Edit extends Component {
 	}
 
 	fetchApiKey() {
-		return apiFetch({
-			path: "/dmgiphyblock/v1/api-key"
-		})
-		.then( apiKey => apiKey )
-		.catch( error => error);
+		return apiFetch( {
+			path: '/dmgiphyblock/v1/api-key',
+		} )
+			.then( ( apiKey ) => apiKey )
+			.catch( ( error ) => error );
 	}
 
 	saveApiKey( apiKey ) {
-		return apiFetch({
-			path: "/dmgiphyblock/v1/api-key",
-			method: "POST",
-			body: apiKey
-		})
-		.then( apiKey => apiKey )
-		.catch( error => error );
+		return apiFetch( {
+			path: '/dmgiphyblock/v1/api-key',
+			method: 'POST',
+			body: apiKey,
+		} ).catch( ( error ) => error );
 	}
 
 	/**
@@ -100,7 +109,7 @@ export default class Edit extends Component {
 	 */
 	async onSearchChange() {
 		const {
-			attributes: { search }
+			attributes: { search },
 		} = this.props;
 
 		if ( this.state.gifs[ this.state.pagination ] ) {
@@ -111,7 +120,7 @@ export default class Edit extends Component {
 		}
 
 		// Minus 1 is needed as offset starts with 0.
-		const offset = (this.state.pagination - 1) * this.GIPHY_RESULTS_LIMIT;
+		const offset = ( this.state.pagination - 1 ) * this.GIPHY_RESULTS_LIMIT;
 
 		const results = await this.fetchGiphy( search, offset );
 
@@ -128,17 +137,19 @@ export default class Edit extends Component {
 		// gifs[0] => Will contain results of pagination 0.
 		// gifs[1] => Results of pagination 1.
 		// and so on..
-		let gifs = this.state.gifs;
+		const gifs = this.state.gifs;
 		gifs[ this.state.pagination ] = results.data;
 
-		let newState = {
+		const newState = {
 			error: false,
 			isLoading: false,
-			gifs: gifs,
+			gifs,
 		};
 
 		if ( this.state.maxPage === 0 ) {
-			newState.maxPage = Math.ceil( results.pagination.total_count / this.GIPHY_RESULTS_LIMIT );
+			newState.maxPage = Math.ceil(
+				results.pagination.total_count / this.GIPHY_RESULTS_LIMIT
+			);
 		}
 
 		this.setState( newState );
@@ -162,9 +173,9 @@ export default class Edit extends Component {
 		} );
 
 		return fetch( requestUrl )
-			.then( data => data.json() )
-			.catch( error => error );
-	};
+			.then( ( data ) => data.json() )
+			.catch( ( error ) => error );
+	}
 
 	/**
 	 * Invoked when a GIF was selected.
@@ -214,7 +225,7 @@ export default class Edit extends Component {
 	 * @param pagination
 	 */
 	onPaginationChangeHandler( pagination ) {
-		this.setState({
+		this.setState( {
 			isLoading: true,
 			pagination: Number( pagination ),
 		} );
@@ -256,10 +267,10 @@ export default class Edit extends Component {
 	 */
 	async onApiKeyChangeHandler() {
 		this.setState( {
-			isProcessingApiKey: true
+			isProcessingApiKey: true,
 		} );
 
-		const saveApiKey = await this.saveApiKey( this.state.apiKey );
+		await this.saveApiKey( this.state.apiKey );
 		this.setState( {
 			isApiKeySaved: true,
 			isProcessingApiKey: false,
@@ -284,15 +295,9 @@ export default class Edit extends Component {
 
 	render() {
 		const {
-			attributes: {
-				alt,
-				blockAlignment,
-				gif,
-				search,
-				textAlignment,
-			},
+			attributes: { alt, blockAlignment, gif, search, textAlignment },
 			className,
-			setAttributes
+			setAttributes,
 		} = this.props;
 
 		const {
@@ -340,11 +345,15 @@ export default class Edit extends Component {
 					<Fragment>
 						<BlockControls>
 							<BlockAlignmentToolbar
-								onChange={ blockAlignment => setAttributes( { blockAlignment } ) }
+								onChange={ ( newBlockAlignment ) =>
+									setAttributes( { newBlockAlignment } )
+								}
 								value={ blockAlignment }
 							/>
 							<AlignmentToolbar
-								onChange={ textAlignment => setAttributes( { textAlignment } ) }
+								onChange={ ( newTextAlignment ) =>
+									setAttributes( { newTextAlignment } )
+								}
 								value={ textAlignment }
 							/>
 						</BlockControls>
@@ -361,7 +370,9 @@ export default class Edit extends Component {
 						gifs={ gifs }
 						isLoading={ isLoading }
 						onGiphyClick={ this.onGiphyClick }
-						onPaginationChangeHandler={ this.onPaginationChangeHandler }
+						onPaginationChangeHandler={
+							this.onPaginationChangeHandler
+						}
 						onSearchChangeHandler={ this.onSearchChangeHandler }
 						maxPage={ maxPage }
 						pagination={ pagination }
