@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name:     Giphy Block
- * Description:     Example block written with ESNext standard and JSX support – build step required.
+ * Description:     Search and insert a Giphy directly from your Gutenberg editor.
  * Version:         0.1.0
- * Author:          The WordPress Contributors
+ * Author:          donMhico
  * License:         GPL-2.0-or-later
  * Text Domain:     giphy-block
  *

@@ -13,6 +13,7 @@ import { registerBlockType } from '@wordpress/blocks';
 import { __ } from '@wordpress/i18n';
 
 import edit from './edit';
+import icon from "./icon";
 
 /**
  * Every block starts by registering a new block type definition.
@@ -31,7 +32,7 @@ registerBlockType( 'donmhico/giphy-block', {
 	 * It will be shown in the Block Tab in the Settings Sidebar.
 	 */
 	description: __(
-		'Example block written with ESNext standard and JSX support – build step required.',
+		'Search and insert a Giphy directly from your Gutenberg editor.',
 		'giphy-block'
 	),
 
@@ -39,13 +40,13 @@ registerBlockType( 'donmhico/giphy-block', {
 	 * Blocks are grouped into categories to help users browse and discover them.
 	 * The categories provided by core are `common`, `embed`, `formatting`, `layout` and `widgets`.
 	 */
-	category: 'widgets',
+	category: 'embed',
 
 	/**
 	 * An icon property should be specified to make it easier to identify a block.
 	 * These can be any of WordPress’ Dashicons, or a custom svg element.
 	 */
-	icon: 'smiley',
+	icon: icon,
 
 	attributes: {
 		alt: {
