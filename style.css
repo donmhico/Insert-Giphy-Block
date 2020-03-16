@@ -8,3 +8,7 @@
 .wp-block-donmhico-giphy-block {
 	padding: 2px;
 }
+
+.wp-block-donmhico-giphy-block.giphy-block-front-end-container img {
+	display: inline;
+}

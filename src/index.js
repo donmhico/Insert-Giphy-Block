@@ -110,7 +110,7 @@ registerBlockType( 'donmhico/giphy-block', {
 		return gif ? (
 			gif.src ? (
 				<div
-					className={ `align${ blockAlignment }` }
+					className={ `giphy-block-front-end-container align${ blockAlignment }` }
 					style={ { textAlign: textAlignment } }
 				>
 					<img alt={ alt } src={ gif.src } />
