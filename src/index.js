@@ -20,12 +20,12 @@ import icon from "./icon";
  *
  * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
-registerBlockType( 'donmhico/giphy-block', {
+registerBlockType( 'donmhico/insert-giphy-block', {
 	/**
 	 * This is the display title for your block, which can be translated with `i18n` functions.
 	 * The block inserter will show this name.
 	 */
-	title: __( 'Giphy Block', 'giphy-block' ),
+	title: __( 'Insert Giphy Block', 'insert-giphy-block' ),
 
 	/**
 	 * This is a short description for your block, can be translated with `i18n` functions.
@@ -33,7 +33,7 @@ registerBlockType( 'donmhico/giphy-block', {
 	 */
 	description: __(
 		'Search and insert a Giphy directly from your Gutenberg editor.',
-		'giphy-block'
+		'insert-giphy-block'
 	),
 
 	/**
@@ -110,7 +110,7 @@ registerBlockType( 'donmhico/giphy-block', {
 		return gif ? (
 			gif.src ? (
 				<div
-					className={ `giphy-block-front-end-container align${ blockAlignment }` }
+					className={ `insert-giphy-block-front-end-container align${ blockAlignment }` }
 					style={ { textAlign: textAlignment } }
 				>
 					<img alt={ alt } src={ gif.src } />

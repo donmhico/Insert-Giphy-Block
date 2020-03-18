@@ -5,10 +5,10 @@
  * Replace them with your own styles or remove the file completely.
  */
 
-.wp-block-donmhico-giphy-block {
+.wp-block-donmhico-insert-giphy-block {
 	padding: 2px;
 }
 
-.wp-block-donmhico-giphy-block.giphy-block-front-end-container img {
+.wp-block-donmhico-insert-giphy-block.insert-giphy-block-front-end-container img {
 	display: inline;
 }

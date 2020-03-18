@@ -1,8 +1,8 @@
 {
-	"name": "giphy-block",
+	"name": "insert-giphy-block",
 	"version": "0.1.0",
-	"description": "Example block written with ESNext standard and JSX support – build step required.",
-	"author": "The WordPress Contributors",
+	"description": "Search and insert a Giphy directly from your Gutenberg editor.",
+	"author": "Michael Joseph Panaga",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {

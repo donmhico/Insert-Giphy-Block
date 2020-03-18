@@ -88,7 +88,7 @@ export default class Edit extends Component {
 
 	fetchApiKey() {
 		return apiFetch( {
-			path: '/dmgiphyblock/v1/api-key',
+			path: '/dminsertgiphyblock/v1/api-key',
 		} )
 			.then( ( apiKey ) => apiKey )
 			.catch( ( error ) => error );
@@ -96,7 +96,7 @@ export default class Edit extends Component {
 
 	saveApiKey( apiKey ) {
 		return apiFetch( {
-			path: '/dmgiphyblock/v1/api-key',
+			path: '/dminsertgiphyblock/v1/api-key',
 			method: 'POST',
 			body: apiKey,
 		} ).catch( ( error ) => error );

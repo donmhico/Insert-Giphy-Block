@@ -12,13 +12,13 @@ export default class GiphyInspectorControl extends Component {
 				<InspectorControls>
 					<PanelBody
 						initialOpen
-						title={ __( 'Giphy Block Settings', 'giphy-block' ) }
+						title={ __( 'Insert Giphy Block Settings', 'insert-giphy-block' ) }
 					>
 						<ApiKeyField { ...this.props } />
 						<PanelRow>
 							<TextControl
-								label={ __( 'GIF Alt', 'giphy-block' ) }
-								placeholder={ __( 'Alt', 'giphy-block' ) }
+								label={ __( 'GIF Alt', 'insert-giphy-block' ) }
+								placeholder={ __( 'Alt', 'insert-giphy-block' ) }
 								onChange={ this.props.onAltChangeHandler }
 								value={ this.props.alt }
 							/>

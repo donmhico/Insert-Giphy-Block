@@ -12,14 +12,14 @@ export default class ApiKeyField extends Component {
 					<Spinner />
 				) : (
 					<TextControl
-						label={ __( 'Enter Giphy API Key', 'giphy-block' ) }
+						label={ __( 'Enter Giphy API Key', 'insert-giphy-block' ) }
 						onChange={ onApiKeyChange }
 						value={ apiKey }
 					/>
 				) }
 				{ isApiKeySaved && (
-					<div className="giphy-block-api-saved">
-						{ __( 'Saved', 'giphy-block' ) }
+					<div className="insert-giphy-block-api-saved">
+						{ __( 'Saved', 'insert-giphy-block' ) }
 					</div>
 				) }
 			</Fragment>

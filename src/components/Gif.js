@@ -8,7 +8,7 @@ export default class Gif extends Component {
 
 		return (
 			<div style={ style }>
-				<img alt={ __( 'Selected GIF', 'giphy-block' ) } src={ gif } />
+				<img alt={ __( 'Selected GIF', 'insert-giphy-block' ) } src={ gif } />
 				<div>
 					<Button isDefault onClick={ onRemoveClickHandler }>
 						<Icon icon="trash" />

@@ -33,9 +33,9 @@ export default class SearchGiphy extends Component {
 		return (
 			<Fragment>
 				<TextControl
-					label={ __( 'Search GIF', 'giphy-block' ) }
+					label={ __( 'Search GIF', 'insert-giphy-block' ) }
 					onChange={ onSearchChangeHandler }
-					placeholder={ __( 'Search GIF', 'giphy-block' ) }
+					placeholder={ __( 'Search GIF', 'insert-giphy-block' ) }
 					value={ search }
 				/>
 
@@ -123,7 +123,7 @@ export default class SearchGiphy extends Component {
 				{ resultGifs && resultGifs.length === 0 && (
 					<p>
 						{ sprintf(
-							__( 'Nothing found for "%s".', 'giphy-block' ),
+							__( 'Nothing found for "%s".', 'insert-giphy-block' ),
 							search
 						) }
 					</p>
